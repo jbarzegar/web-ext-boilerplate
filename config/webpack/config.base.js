@@ -211,13 +211,22 @@ const plugins = [
   //     })
   // ),
 
-  new webpack.DefinePlugin(env.stringified)
+  new webpack.DefinePlugin(env.stringified),
 
-  // new CopyWebpackPlugin([
-  //   {
-  //     from: path.resolve(publicDir, 'manifest.json')
-  //   }
-  // ])
+  new CopyWebpackPlugin([
+    {
+      from: path.resolve(
+        __dirname,
+        '../../node_modules/webextension-polyfill/dist/browser-polyfill.min.js'
+      )
+    },
+    {
+      from: path.resolve(
+        __dirname,
+        '../../node_modules/webextension-polyfill/dist/browser-polyfill.min.js.map'
+      )
+    }
+  ])
 ]
 
 const baseEntry = [require.resolve('../polyfills')]

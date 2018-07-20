@@ -5,3 +5,5 @@ build/
 dist/
 
 *.log
+
+chrome_user_data/

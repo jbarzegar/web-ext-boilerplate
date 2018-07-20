@@ -7,12 +7,15 @@ const config = require('./config.base')
 
 const port = process.env.PORT || 3000
 
+const root = path.resolve(__dirname, '../../')
+
 module.exports = {
   mode: 'development',
   ...config,
   entry: {
     ...config.entry,
-    devListener: [require.resolve('./dev-window.js')]
+    devListener: [require.resolve('./dev-window.js')],
+    devWindowHelpers: [path.resolve(root, 'src/dev/dev-window-helpers.js')]
   },
   plugins: [
     ...config.plugins,
@@ -33,6 +36,17 @@ module.exports = {
       chunks: ['vendors', 'popup', 'runtime~popup']
     }),
     /* Needed in order to hot reload the web extension */
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, '../../public/window.html'),
+      filename: 'window.html',
+      chunks: [
+        'vendors',
+        'popup',
+        'runtime~popup',
+        'devWindowHelpers',
+        'runtime~devWindowHelpers'
+      ]
+    }),
     new WritePlugin()
   ],
   devServer: {

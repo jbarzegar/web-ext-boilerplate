@@ -1,3 +1,4 @@
+/* global browser */
 import React from 'react'
 import ReactDOM from 'react-dom'
 
@@ -15,11 +16,19 @@ class App extends React.Component {
   state = {
     count: 0
   }
+  async componentDidMount() {
+    const count = (await browser.storage.local.get('count')) || this.state.count
 
+    this.setCount({ count })
+  }
+  setCount = () => browser.storage.local.set({ count: this.state.count })
   handleClick = (actionType, ...params) => e => {
     const actions = {
-      INCREMENT: () => this.setState({ count: this.state.count + 1 }),
-      DECREMENT: () => this.setState({ count: this.state.count - 1 })
+      INCREMENT: () => {
+        this.setState({ count: this.state.count + 1 }, this.setCount)
+      },
+      DECREMENT: () =>
+        this.setState({ count: this.state.count - 1 }, this.setCount)
     }
 
     actions[actionType](...params)
@@ -27,7 +36,7 @@ class App extends React.Component {
 
   render = () => (
     <>
-      <h1>Hello :thonking:</h1>
+      <h1>Hello</h1>
 
       <h2>Count: {this.state.count}</h2>
 
