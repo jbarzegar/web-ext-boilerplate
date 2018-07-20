@@ -1,0 +1,21 @@
+{
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*", "file://*/*"],
+      "js": ["/js/vapi.js", "js/vapi-client.js", "js/contentscript.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["/js/scriptlets/subscriber.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "options_ui": {
+    "page": "dashboard.html",
+    "open_in_tab": true
+  },
+  "web_accessible_resources": ["/web_accessible_resources/*"]
+}

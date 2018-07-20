@@ -1,0 +1,39 @@
+{
+  "manifest_version": 2,
+  "name": "TEsting ws build tool",
+  "short_name": "ws build beta",
+  "version": "3.1.0",
+  "minimum_chrome_version": "45",
+  "description": "Testing things",
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_title": "Windscribe DEV"
+  },
+  "permissions": [
+    "http://*/",
+    "https://*/",
+    "proxy",
+    "management",
+    "tabs",
+    "clipboardWrite",
+    "webRequest",
+    "<all_urls>",
+    "webRequestBlocking",
+    "activeTab",
+    "background",
+    "storage",
+    "unlimitedStorage",
+    "contextMenus",
+    "privacy",
+    "webNavigation",
+    "notifications",
+    "alarms",
+    "cookies"
+  ],
+  "background": {
+    "page": "background.html"
+  },
+  "content_security_policy":
+    "script-src 'self' 'unsafe-eval'; object-src 'self';",
+  "web_accessible_resources": ["http://localhost:3000/*"]
+}
