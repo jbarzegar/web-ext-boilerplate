@@ -1,5 +1,4 @@
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const webpack = require('webpack')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const config = require('./config.base')
@@ -52,16 +51,29 @@ module.exports = {
       cache: true,
       sourceMap: false
     }),
-
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, '../../public/background.html'),
-      filename: 'background.html',
-      chunks: ['background', 'runtime~background', 'vendors']
-    }),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, '../../public/popup.html'),
-      filename: 'popup.html',
-      chunks: ['popup', 'runtime~popup', 'vendors']
-    })
+    new webpack.ProgressPlugin(
+      (percentage, msg, current, active, modulepath) => {
+        if (process.stdout.isTTY && percentage < 1) {
+          process.stdout.cursorTo(0)
+          modulepath = modulepath
+            ? ' …' + modulepath.substr(modulepath.length - 30)
+            : ''
+          current = current ? ' ' + current : ''
+          active = active ? ' ' + active : ''
+          process.stdout.write(
+            (percentage * 100).toFixed(0) +
+              '% ' +
+              msg +
+              current +
+              active +
+              modulepath +
+              ' '
+          )
+          process.stdout.clearLine(1)
+        } else if (percentage === 1) {
+          process.stdout.write('\n')
+        }
+      }
+    )
   ]
 }

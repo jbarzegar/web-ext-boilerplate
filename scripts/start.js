@@ -16,5 +16,3 @@ prepare().then(() =>
     }
   )
 )
-
-// server.listen(port)

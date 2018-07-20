@@ -7,7 +7,6 @@ const manifestDir = path.join(__dirname, '../../config/manifest/')
 // Manifests
 const baseManifest = require(path.resolve(manifestDir, 'base.json'))
 const devManifest = require(path.resolve(manifestDir, 'dev.json'))
-const ublockManifest = require(path.resolve(manifestDir, 'ublock.json'))
 
 const ENV = process.env.NODE_ENV
 
@@ -34,8 +33,7 @@ module.exports = (buildTarget = process.env.BUILD_TARGET || 'chrome') => {
     const mergedKeys = arrayKeys.map(keyName => {
       let manifestKeys = [
         ...getArray(baseManifest[keyName]),
-        ...getArray(buildManifest[keyName]),
-        ...getArray(ublockManifest[keyName])
+        ...getArray(buildManifest[keyName])
       ]
 
       if (ENV === 'development') {
@@ -51,7 +49,6 @@ module.exports = (buildTarget = process.env.BUILD_TARGET || 'chrome') => {
       baseManifest,
       ENV === 'development' ? devManifest : {},
       buildManifest,
-      ublockManifest,
       {
         version: process.env.npm_package_version
       },

@@ -1,36 +1,15 @@
 {
   "manifest_version": 2,
-  "name": "Windscribe - Free VPN and Ad Blocker",
-  "short_name": "Windscribe",
-  "version": "3.0.0",
+  "name": "Test-ext",
+  "short_name": "test",
+  "version": "1.0.0",
   "minimum_chrome_version": "45",
-  "description":
-    "Windscribe helps you mask your physical location, circumvent censorship, block ads and trackers on websites you use every day",
+  "description": "A test ext built with webpack 4 and react",
   "browser_action": {
     "default_popup": "popup.html",
-    "default_title": "Windscribe"
+    "default_title": "Test-ext"
   },
-  "permissions": [
-    "http://*/",
-    "https://*/",
-    "proxy",
-    "management",
-    "tabs",
-    "clipboardWrite",
-    "webRequest",
-    "<all_urls>",
-    "webRequestBlocking",
-    "activeTab",
-    "background",
-    "storage",
-    "unlimitedStorage",
-    "contextMenus",
-    "privacy",
-    "webNavigation",
-    "notifications",
-    "alarms",
-    "cookies"
-  ],
+  "permissions": ["http://*/", "https://*/"],
 
   "background": {
     "page": "background.html"

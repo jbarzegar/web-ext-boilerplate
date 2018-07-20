@@ -37,6 +37,7 @@ module.exports = {
   ],
   devServer: {
     port,
-    content: path.resolve(__dirname, '../build/')
+    content: path.resolve(__dirname, '../build/'),
+    clipboard: false
   }
 }
