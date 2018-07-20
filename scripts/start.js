@@ -41,10 +41,16 @@ prepare()
       firstCompile = false
       logger.info('Opening chrome')
       exec(
-        `${chromeExecPath} --remote-debugging-port=9222 --load-extension=${extPath} --user-data-dir=${chromeDirPath}`,
+        `${chromeExecPath} --load-extension=${extPath} --user-data-dir=${chromeDirPath}`,
         err => {
           if (err) throw err
         }
       )
     })
+
+    if (process.env.WEB_EXT_USE_REACT_DEVTOOLS) {
+      exec(path.join(__dirname, '../node_modules/.bin/react-devtools'), err => {
+        if (err) throw err
+      })
+    }
   })

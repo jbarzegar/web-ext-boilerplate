@@ -61,6 +61,7 @@
     "nodegit": "^0.22.2",
     "ora": "^3.0.0",
     "react-dev-utils": "^5.0.1",
+    "react-devtools": "^3.2.3",
     "rimraf": "^2.6.2",
     "style-loader": "^0.21.0",
     "svgr": "1.9.2",
