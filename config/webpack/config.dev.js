@@ -14,7 +14,7 @@ module.exports = {
   ...config,
   entry: {
     ...config.entry,
-    devListener: [require.resolve('./dev-window.js')],
+    devListener: [require.resolve('../dev-window.js')],
     devWindowHelpers: [path.resolve(root, 'src/dev/dev-window-helpers.js')]
   },
   plugins: [
