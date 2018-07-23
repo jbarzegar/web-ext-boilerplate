@@ -8,9 +8,6 @@ module.exports = {
   mode: 'production',
   // Don't attempt to continue if there are errors
   bail: true,
-  output: {
-    ...config.output
-  },
   plugins: [
     ...config.plugins,
 

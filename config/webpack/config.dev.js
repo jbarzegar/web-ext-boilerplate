@@ -1,57 +1,36 @@
 const WritePlugin = require('write-file-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-const path = require('path')
+const { createHtmlTemplates, includeRuntimeChunk } = require('../helpers')
 
 const config = require('./config.base')
+const paths = require('../paths')
 
 const port = process.env.PORT || 3000
-
-const root = path.resolve(__dirname, '../../')
 
 module.exports = {
   mode: 'development',
   ...config,
   entry: {
     ...config.entry,
-    devListener: [require.resolve('../dev-window.js')],
-    devWindowHelpers: [path.resolve(root, 'src/dev/dev-window-helpers.js')]
+    devListener: [paths.devWindowIndexJs],
+    devWindow: [paths.devWindowHelpers]
   },
   plugins: [
     ...config.plugins,
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, '../../public/background.html'),
-      filename: 'background.html',
-      chunks: [
-        'vendors',
-        'background',
-        'runtime~background',
-        'devListener',
-        'runtime~devListener'
-      ]
-    }),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, '../../public/popup.html'),
-      filename: 'popup.html',
-      chunks: ['vendors', 'popup', 'runtime~popup']
-    }),
+    createHtmlTemplates([
+      {
+        name: 'background',
+        additionalChunks: includeRuntimeChunk('devListener')
+      },
+      'popup',
+      { name: 'devWindow', additionalChunks: ['popup'] }
+    ]),
     /* Needed in order to hot reload the web extension */
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, '../../public/window.html'),
-      filename: 'window.html',
-      chunks: [
-        'vendors',
-        'popup',
-        'runtime~popup',
-        'devWindowHelpers',
-        'runtime~devWindowHelpers'
-      ]
-    }),
     new WritePlugin()
   ],
   devServer: {
     port,
-    content: path.resolve(__dirname, '../build/'),
+    content: paths.buildDir,
     clipboard: false
   }
 }

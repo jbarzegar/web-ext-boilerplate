@@ -1,5 +1,5 @@
 /* global browser */
-import React from 'react'
+import React, { Fragment } from 'react'
 import ReactDOM from 'react-dom'
 
 const root = document.querySelector('#app-frame')
@@ -12,7 +12,7 @@ const buttonStyle = {
   borderRadius: 10
 }
 
-class App extends React.Component {
+class Counter extends React.Component {
   state = {
     count: 0
   }
@@ -35,7 +35,7 @@ class App extends React.Component {
   }
 
   render = () => (
-    <>
+    <Fragment>
       <h1>Hello</h1>
 
       <h2>Count: {this.state.count}</h2>
@@ -46,8 +46,16 @@ class App extends React.Component {
       <button style={buttonStyle} onClick={this.handleClick('INCREMENT')}>
         +
       </button>
-    </>
+    </Fragment>
   )
 }
+
+const App = () => (
+  <Fragment>
+    <h1>Hello</h1>
+
+    <Counter />
+  </Fragment>
+)
 
 ReactDOM.render(<App />, root)

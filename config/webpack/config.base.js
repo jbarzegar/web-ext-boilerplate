@@ -2,27 +2,23 @@ const webpack = require('webpack')
 const path = require('path')
 
 /* Plugins */
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
-const getClientEnviroment = require('../envs')
+const { parallelizeLoader } = require('../helpers')
 
-const root = path.resolve(__dirname, '../../')
-const publicDir = path.resolve(root, 'public')
+const getClientEnv = require('../envs')
+const paths = require('../paths')
 
-const base = path.join('src/common/')
+const base = path.join(paths.root, 'common')
 const popup = path.join(base, 'popup')
 
-// Webpack uses `publicPath` to determine where the app is being served from.
-// In development, we always serve from the root. This makes config easier.
-const publicPath = '/'
 // `publicUrl` is just like `publicPath`, but we will provide it to our app
 // as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
 // Omit trailing slash as %PUBLIC_PATH%/xyz looks better than %PUBLIC_PATH%xyz.
 const publicUrl = ''
 // Get environment variables to inject into our app.
 
-const env = getClientEnviroment(publicUrl)
+const env = getClientEnv(publicUrl)
 
 const alias = {
   Components: path.resolve(popup, 'components'),
@@ -61,16 +57,7 @@ const resolve = {
 }
 
 const jsRegex = /\.(js|jsx|mjs)$/
-const include = [path.resolve(base, 'src')]
 const exclude = [/[/\\\\]node_modules[/\\\\]/]
-
-/* Helper function to quickly include thread loader with sane defaults */
-const parallelizeLoader = () => ({
-  loader: require.resolve('thread-loader'),
-  options: {
-    poolTimeout: process.env.NODE_ENV === 'development' ? Infinity : 5000 // keep workers alive for more effective watch mode
-  }
-})
 
 /* Webpack config entry */
 const rules = [
@@ -107,7 +94,7 @@ const rules = [
         use: [
           // This loader parallelizes code compilation, it is optional but
           // improves compile time on larger projects
-          // parallelizeLoader(),
+          parallelizeLoader(),
           {
             loader: require.resolve('babel-loader'),
             options: {
@@ -140,7 +127,7 @@ const rules = [
         use: [
           // This loader parallelizes code compilation, it is optional but
           // improves compile time on larger projects
-          // parallelizeLoader(),
+          parallelizeLoader(),
           {
             loader: require.resolve('babel-loader'),
             options: {
@@ -175,55 +162,20 @@ const rules = [
   // Make sure to add the new loader(s) before the "file" loader.
 ]
 
-const createChunkArray = mainChunkName => [
-  'vendors',
-  `runtime~${mainChunkName}`,
-  mainChunkName
-]
-
-// const createTemplateConfig = ({ name, chunks = [] }) => {
-//   const filename = `${name}.html`
-
-//   return {
-//     template: path.resolve(publicDir, filename),
-//     filename,
-//     chunks: [...createChunkArray(name), ...chunks]
-//   }
-// }
-
-// const htmlTemplates = [
-//   createTemplateConfig({ name: 'popup' }),
-//   createTemplateConfig({
-//     name: 'background',
-//     chunks:
-//       process.env.NODE_ENV === 'development'
-//         ? ['devListener', 'runtime~devListener']
-//         : []
-//   })
-// ]
-
 const plugins = [
-  // ...htmlTemplates.map(
-  //   config =>
-  //     new HtmlWebpackPlugin({
-  //       ...config,
-  //       inject: 'body'
-  //     })
-  // ),
-
   new webpack.DefinePlugin(env.stringified),
 
   new CopyWebpackPlugin([
     {
       from: path.resolve(
-        __dirname,
-        '../../node_modules/webextension-polyfill/dist/browser-polyfill.min.js'
+        paths.nodeModules,
+        'webextension-polyfill/dist/browser-polyfill.min.js'
       )
     },
     {
       from: path.resolve(
-        __dirname,
-        '../../node_modules/webextension-polyfill/dist/browser-polyfill.min.js.map'
+        paths.nodeModules,
+        'webextension-polyfill/dist/browser-polyfill.min.js.map'
       )
     }
   ])
@@ -233,11 +185,11 @@ const baseEntry = [require.resolve('../polyfills')]
 // Config
 module.exports = {
   entry: {
-    popup: [...baseEntry, path.resolve(root, 'src/common/popup.js')],
-    background: [...baseEntry, path.resolve(root, 'src/common/background.js')]
+    popup: [...baseEntry, paths.popupIndexJs],
+    background: [...baseEntry, paths.backgroundIndexJs]
   },
   output: {
-    path: path.resolve(root, 'build'),
+    path: paths.buildDir,
     filename: 'static/js/[name].bundle.js',
     chunkFilename: 'static/js/[name].chunk.js'
   },
