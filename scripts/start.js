@@ -1,11 +1,19 @@
 process.env.NODE_ENV = 'development'
 process.env.BABEL_ENV = 'development'
 
-const webpack = require('webpack')
 const path = require('path')
-const serve = require('webpack-serve')
+const { exec } = require('child_process')
+
+const remoteDevServer = require('remotedev-server')
+
+const webpack = require('webpack')
+const WebpackDevServer = require('webpack-dev-server')
+
+const clearConsole = require('react-dev-utils/clearConsole')
+const errorOverlayMiddleware = require('react-dev-utils/errorOverlayMiddleware')
+
 const logger = require('consola')
-const exec = require('child_process').exec
+const chalk = require('chalk')
 
 const prepare = require('./utils/prepare')
 
@@ -21,36 +29,49 @@ let firstCompile = true
 
 const compiler = webpack(config)
 
-prepare()
-  .then(() =>
-    serve(
-      {},
-      {
-        compiler,
-        ...config.devServer
+/* Waits until webpack compile finishes */
+compiler.hooks.done.tap({ name: 'Initial compile startup' }, () => {
+  if (firstCompile) {
+    firstCompile = false
+    logger.info('Opening chrome')
+    exec(
+      `${chromeExecPath} --load-extension=${extPath} --user-data-dir=${chromeDirPath}`,
+      err => {
+        if (err) throw err
       }
     )
-  )
-  .then(res => {
-    res.on('build-finished', () => {
-      console.clear()
-      console.log(firstCompile)
-      if (!firstCompile) {
-        return
-      }
-      firstCompile = false
-      logger.info('Opening chrome')
-      exec(
-        `${chromeExecPath} --load-extension=${extPath} --user-data-dir=${chromeDirPath}`,
-        err => {
-          if (err) throw err
-        }
-      )
-    })
+  }
+})
 
-    if (process.env.WEB_EXT_USE_REACT_DEVTOOLS) {
-      exec(path.join(__dirname, '../node_modules/.bin/react-devtools'), err => {
-        if (err) throw err
-      })
+const init = async () => {
+  await prepare()
+
+  const server = new WebpackDevServer(compiler, {
+    ...config.devServer,
+    before(app) {
+      app.use(errorOverlayMiddleware())
     }
   })
+
+  server.listen(3000, '0.0.0.0', err => {
+    if (err) {
+      console.log(err)
+    }
+
+    if (process.stdout.isTTY) {
+      clearConsole()
+    }
+
+    logger.info(chalk.blue('Starting development server... \n'))
+  })
+
+  const sigs = ['SIGINT', 'SIGTERM']
+  sigs.forEach(function(sig) {
+    process.on(sig, function() {
+      server.close()
+      process.exit()
+    })
+  })
+}
+
+init()

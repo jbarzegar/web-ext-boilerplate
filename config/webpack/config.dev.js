@@ -1,4 +1,5 @@
 const WritePlugin = require('write-file-webpack-plugin')
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 
 const { createHtmlTemplates, includeRuntimeChunk } = require('../helpers')
 
@@ -13,7 +14,10 @@ module.exports = {
   entry: {
     ...config.entry,
     devListener: [paths.devWindowIndexJs],
-    devWindow: [paths.devWindowHelpers]
+    devWindow: [
+      require.resolve('webpack-serve-overlay'),
+      paths.devWindowHelpers
+    ]
   },
   plugins: [
     ...config.plugins,
@@ -25,12 +29,16 @@ module.exports = {
       'popup',
       { name: 'devWindow', additionalChunks: ['popup'] }
     ]),
+    new FriendlyErrorsPlugin(),
     /* Needed in order to hot reload the web extension */
     new WritePlugin()
   ],
   devServer: {
     port,
-    content: paths.buildDir,
-    clipboard: false
+    contentBase: paths.buildDir,
+    compress: true,
+    clientLogLevel: 'none',
+    overlay: false,
+    quiet: true
   }
 }

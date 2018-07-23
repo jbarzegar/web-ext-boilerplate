@@ -36,7 +36,7 @@ class Counter extends React.Component {
 
   render = () => (
     <Fragment>
-      <h1>Hello</h1>
+      <h1>Hello world</h1>
 
       <h2>Count: {this.state.count}</h2>
 
@@ -52,8 +52,6 @@ class Counter extends React.Component {
 
 const App = () => (
   <Fragment>
-    <h1>Hello</h1>
-
     <Counter />
   </Fragment>
 )
