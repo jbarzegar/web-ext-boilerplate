@@ -30,7 +30,7 @@ const runBuild = async target => {
     plugins: [
       ...config.plugins,
       /* The reason these plugins are not configured in `config.prod` is because there's some  crazy bug that prevents  */
-      createHtmlTemplates(['background', 'popup'])
+      ...createHtmlTemplates(['background', 'popup'])
     ]
   })
 }

@@ -17,7 +17,7 @@ module.exports = {
   },
   plugins: [
     ...config.plugins,
-    createHtmlTemplates([
+    ...createHtmlTemplates([
       {
         name: 'background',
         additionalChunks: includeRuntimeChunk('devListener')
