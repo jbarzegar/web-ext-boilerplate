@@ -3,35 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "homepage": "https://windscribe.com/",
-  "repository": {
-    "type": "git",
-    "url": "git+https://bitbucket.org/windscribe/browserextension.git"
-  },
-  "uBlockVersion": "1.16.12",
-  "i18n": {
-    "locales": [
-      "af",
-      "de",
-      "en",
-      "es",
-      "fr",
-      "id",
-      "hi",
-      "it",
-      "ja",
-      "ko",
-      "nl",
-      "pt",
-      "ru",
-      "se",
-      "th",
-      "tr",
-      "vi",
-      "zh"
-    ],
-    "default": "en"
-  },
   "devDependencies": {
     "@babel/core": "7.0.0-beta.46",
     "@babel/runtime": "7.0.0-beta.46",
