@@ -1,3 +1,4 @@
+const { HotModuleReplacementPlugin } = require('webpack')
 const WritePlugin = require('write-file-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 
@@ -14,10 +15,7 @@ module.exports = {
   entry: {
     ...config.entry,
     devListener: [paths.devWindowIndexJs],
-    devWindow: [
-      require.resolve('webpack-serve-overlay'),
-      paths.devWindowHelpers
-    ]
+    devWindow: [paths.devWindowHelpers]
   },
   plugins: [
     ...config.plugins,
@@ -29,6 +27,7 @@ module.exports = {
       'popup',
       { name: 'devWindow', additionalChunks: ['popup'] }
     ]),
+    new HotModuleReplacementPlugin(),
     new FriendlyErrorsPlugin(),
     /* Needed in order to hot reload the web extension */
     new WritePlugin()

@@ -27,6 +27,13 @@ const chromeDirPath = path.resolve(__dirname, '../', 'chrome_user_data')
 
 let firstCompile = true
 
+for (const entryName in config.entry) {
+  config.entry[entryName] = [
+    'webpack-dev-server/client?http://localhost:' + config.devServer.port,
+    'webpack/hot/dev-server'
+  ].concat(config.entry[entryName])
+}
+
 const compiler = webpack(config)
 
 /* Waits until webpack compile finishes */
